@@ -81,79 +81,13 @@ namespace Chess
         private PictureBox[] initializeBoardArray()
         {
             PictureBox[] boardArray = new PictureBox[64];
-            //label17.Text = " ";
             foreach (PictureBox pb in this.Controls.OfType<PictureBox>())
             {
                 if (pb.Tag != null)
                 {
-                    //label17.Text += Convert.ToInt32(pb.Tag.ToString()[1] - '0') * 8 + Convert.ToInt32(pb.Tag.ToString()[0] - '0') + " ";
                     boardArray[Convert.ToInt32(pb.Tag.ToString()[1] - '0') * 8 + Convert.ToInt32(pb.Tag.ToString()[0] - '0')] = pb; // the command after if statement is wrong }
                 }
             }
-            //boardArray[0] = A8;
-            //boardArray[1] = B8;
-            //boardArray[2] = C8;
-            //boardArray[3] = D8;
-            //boardArray[4] = E8;
-            //boardArray[5] = F8;
-            //boardArray[6] = G8;
-            //boardArray[7] = H8;
-            //boardArray[8] = A7;
-            //boardArray[9] = B7;
-            //boardArray[10] = C7;
-            //boardArray[11] = D7;
-            //boardArray[12] = E7;
-            //boardArray[13] = F7;
-            //boardArray[14] = G7;
-            //boardArray[15] = H7;
-            //boardArray[16] = A6;
-            //boardArray[17] = B6;
-            //boardArray[18] = C6;
-            //boardArray[19] = D6;
-            //boardArray[20] = E6;
-            //boardArray[21] = F6;
-            //boardArray[22] = G6;
-            //boardArray[23] = H6;
-            //boardArray[24] = A5;
-            //boardArray[25] = B5;
-            //boardArray[26] = C5;
-            //boardArray[27] = D5;
-            //boardArray[28] = E5;
-            //boardArray[29] = F5;
-            //boardArray[30] = G5;
-            //boardArray[31] = H5;
-            //boardArray[32] = A4;
-            //boardArray[33] = B4;
-            //boardArray[34] = C4;
-            //boardArray[35] = D4;
-            //boardArray[36] = E4;
-            //boardArray[37] = F4;
-            //boardArray[38] = G4;
-            //boardArray[39] = H4;
-            //boardArray[40] = A3;
-            //boardArray[41] = B3;
-            //boardArray[42] = C3;
-            //boardArray[43] = D3;
-            //boardArray[44] = E3;
-            //boardArray[45] = F3;
-            //boardArray[46] = G3;
-            //boardArray[47] = H3;
-            //boardArray[48] = A2;
-            //boardArray[49] = B2;
-            //boardArray[50] = C2;
-            //boardArray[51] = D2;
-            //boardArray[52] = E2;
-            //boardArray[53] = F2;
-            //boardArray[54] = G2;
-            //boardArray[55] = H2;
-            //boardArray[56] = A1;
-            //boardArray[57] = B1;
-            //boardArray[58] = C1;
-            //boardArray[59] = D1;
-            //boardArray[60] = E1;
-            //boardArray[61] = F1;
-            //boardArray[62] = G1;
-            //boardArray[63] = H1;
             return boardArray;
         }
         private void assignImage(bool color, Type typeOfPiece, int i)
@@ -179,18 +113,6 @@ namespace Chess
             }
             boardArray[i].BackgroundImageLayout = ImageLayout.Stretch;
         }
-        //private int testIfPiece(int x, int y)//we want to ignore new posiiton of moved piece when testing for piece in a desired location // You never want to include the moving piece 
-        //{
-        //    int q = 99;
-        //    for (int i = 0; i < allPieces.Length; i++)
-        //    {
-        //        if (allPieces[i].Position == new Point(x,y) && i != spotInPieceArray)
-        //        {
-        //            q = i;
-        //        }
-        //    }
-        //    return q;
-        //}
         private int findPiece(int x = 99,  int y = 99) // if no ints are sent for a position then it defaults to returning position of moved piece (oldPos)
         {
             int q = 99;
@@ -237,7 +159,6 @@ namespace Chess
             else if (canMove)
             {
                 refreshLegals();
-                //boardArray[findBoardSpot(oldPos.X, oldPos.Y)].BackColor = ogColor;
                 String temp = myBox.Tag.ToString();
                 newPos = new Point(Convert.ToInt32(temp[0]  - '0'), Convert.ToInt32(temp[1] - '0'));
                 spotInPieceArray = findPiece();
@@ -247,7 +168,6 @@ namespace Chess
               if (findPiece(newPos.X, newPos.Y) != 99 && allPieces[findPiece()].Color == allPieces[findPiece(newPos.X, newPos.Y)].Color) { boardArray[findBoardSpot(oldPos.X, oldPos.Y)].BackColor = ogColor; canMove = false; return; }              
                 int q = findBoardSpot(newPos.X, newPos.Y);
                 refreshHighlights(findBoardSpot(oldPos.X, oldPos.Y), q);
-                //ogColor = boardArray[q].BackColor;
                 boardArray[q].BackColor = Color.FromArgb(247, 247, 105);
                 canMove = false;
                           
@@ -331,15 +251,11 @@ namespace Chess
             int oldSpotInBoardArray = findBoardSpot(oldPos.X, oldPos.Y); // spot in boardArray of old location
             int newSpotInBoardArray = findBoardSpot(newPos.X, newPos.Y); // spot in boardArray of new location        
 
-        //if (checkpreventsMove(temp)) return;
-
             prevOld = oldSpotInBoardArray;
             prevNew = newSpotInBoardArray;
 
             allPieces[spotInPieceArray].Moves++;
 
-        //if (findPiece(newPos.X, newPos.Y) != 99 && newPos == allPieces[findPiece(newPos.X, newPos.Y)].Position && allPieces[findPiece(newPos.X, newPos.Y)].Type == Type.King) winner = true;
-        // ^^^ tests if a king has been captured
             boardArray[oldSpotInBoardArray].BackgroundImage.Dispose();// removes visual image
             boardArray[oldSpotInBoardArray].BackgroundImage = null;//sets image value to null 
             allPieces[spotInPieceArray].Position = newPos; // updates piece position  
@@ -353,8 +269,7 @@ namespace Chess
         }
         if (findPiece(newPos.X, newPos.Y) != 99) { allPieces = removePiece(allPieces, findPiece(newPos.X, newPos.Y)); }
 
-            assignImage(temp.Color, temp.Type, newSpotInBoardArray); // creates image
-            //boardArray[newSpotInBoardArray].BackColor = Color.FromArgb(247, 247, 105);//
+            assignImage(temp.Color, temp.Type, newSpotInBoardArray);
             gameMoves++;
             
         if (ifCheck()) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
@@ -415,32 +330,6 @@ namespace Chess
             }
             return check = false;
         }
-        //private bool underAttack(Point pos, Pieces target = null) // issue may involve spotInPieceArray in the findPiece() method. The variable changes when checkLegal is used for check sim
-        //{
-        //    promote = true; // just so moves cant be done while checking for check
-        //    Point tempNew = newPos;
-        //    Point tempOld = oldPos;
-
-        //    foreach (Pieces piece in allPieces)
-        //    {
-        //        if (piece.Color != target.Color)
-        //        {
-        //            //if (check && piece.Position == allPieces[spotInPieceArray].Position) return check = false;
-        //            newPos = target.Position;
-        //            oldPos = piece.Position;
-
-        //            int LM = piece.LastMove, temp = spotInPieceArray;
-        //            spotInPieceArray = 99;
-        //            if (checkLegal(piece, true)) check = true;
-        //            spotInPieceArray = temp;
-        //            piece.LastMove = LM;
-        //        }
-        //    }
-        //    newPos = tempNew;
-        //    oldPos = tempOld;
-        //    promote = false;
-        //    return check;
-        //}
         private Point[] allLegalMoves(Pieces piece)
         {
             Point[] array = new Point[0];
@@ -450,7 +339,7 @@ namespace Chess
                 {
                     newPos = new Point(i, q);
                     oldPos = piece.Position;
-                    if (Legal(piece, true) && !checkpreventsMove(piece))//maybe add 'true' argument for sim
+                    if (Legal(piece, true) && !checkpreventsMove(piece))
                     {
                         Array.Resize(ref array, array.Length+1);
                         array[array.Length - 1] = newPos;
@@ -465,32 +354,10 @@ namespace Chess
             if (findPiece(newPos.X, newPos.Y) != 99 && allPieces[findPiece(newPos.X, newPos.Y)].Color == piece.Color) return legal = false;
             if (newPos == oldPos) return legal = false;
             int deltaX = Math.Abs(newPos.X - oldPos.X), deltaY = Math.Abs(newPos.Y - oldPos.Y);
-            // if (findPiece(newPos.X, newPos.Y) != 99) { if (allPieces[findPiece(newPos.X, newPos.Y)].Color == piece.Color) { return legal; } } // if piece blocks desired move and its your own, method is returned.
 
             switch (piece.Type)
             {
-                case Type.Pawn://issues with check may involve lastMove and other variables that are updated during move simulation.
-                    //int x = newPos.X, y = newPos.Y;
-                    //if (!allPieces[spotInPieceArray].Color && newPos.Y < oldPos.Y) // if white
-                    //{
-                    //    if (piece.Moves == 0 && (deltaY == 2 || deltaY == 1) && deltaX == 0 && testIfPiece(newPos.X, newPos.Y) == 99 && testIfPiece(newPos.X, newPos.Y + 1) == 99) { piece.Moves++; legal = true; piece.LastMove = gameMoves; }
-                    //    if (piece.Moves > 0 && deltaY == 1 && deltaX == 0 && testIfPiece(newPos.X, newPos.Y) == 99) { piece.Moves++; legal = true; }
-                    //    if (deltaY == 1 && deltaX == 1 && testIfPiece(newPos.X, newPos.Y) != 99) { piece.Moves++; legal = true; }
-                    //    if (deltaY == 1 && deltaX == 1 && testIfPiece(oldPos.X - 1, oldPos.Y) != 99 && allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].Position.Y == 3 && allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].Moves == 1 && newPos.X == allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].Position.X && (gameMoves - allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].LastMove < 2)) { allPieces[spotInPieceArray].Position = newPos; allPieces = removePiece(allPieces, testIfPiece(oldPos.X - 1, oldPos.Y)); boardArray[findBoardSpot(oldPos.X - 1, oldPos.Y)].BackgroundImage.Dispose(); boardArray[findBoardSpot(oldPos.X - 1, oldPos.Y)].BackgroundImage = null; legal = true; }
-                    //    if (deltaY == 1 && deltaX == 1 && testIfPiece(oldPos.X + 1, oldPos.Y) != 99 && allPieces[testIfPiece(oldPos.X + 1, oldPos.Y)].Position.Y == 3 && allPieces[testIfPiece(oldPos.X + 1, oldPos.Y)].Moves == 1 && newPos.X == allPieces[testIfPiece(oldPos.X + 1, oldPos.Y)].Position.X && (gameMoves - allPieces[testIfPiece(oldPos.X + 1, oldPos.Y)].LastMove < 2)) { allPieces[spotInPieceArray].Position = newPos; allPieces = removePiece(allPieces, testIfPiece(oldPos.X + 1, oldPos.Y)); boardArray[findBoardSpot(oldPos.X + 1, oldPos.Y)].BackgroundImage.Dispose(); boardArray[findBoardSpot(oldPos.X + 1, oldPos.Y)].BackgroundImage = null; legal = true; } // this line bugged
-
-                    //    if (newPos.Y == 0) promote = true;
-                    //}
-                    //if (allPieces[spotInPieceArray].Color && newPos.Y > oldPos.Y) // if black
-                    //{
-                    //    if (piece.Moves == 0 && (deltaY == 2 || deltaY == 1) && deltaX == 0 && testIfPiece(newPos.X, newPos.Y) == 99 && testIfPiece(newPos.X, newPos.Y - 1) == 99) { piece.Moves++; legal = true; piece.LastMove = gameMoves; }
-                    //    if (piece.Moves > 0 && deltaY == 1 && deltaX == 0 && testIfPiece(newPos.X, newPos.Y) == 99) { piece.Moves++; legal = true; }
-                    //    if (deltaY == 1 && deltaX == 1 && testIfPiece(newPos.X, newPos.Y) != 99) { piece.Moves++; legal = true; }
-                    //    if (deltaY == 1 && deltaX == 1 && testIfPiece(oldPos.X - 1, oldPos.Y) != 99 && allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].Position.Y == 4 && allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].Moves == 1 && newPos.X == allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].Position.X && (gameMoves - allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].LastMove < 2)) { allPieces[spotInPieceArray].Position = newPos; allPieces = removePiece(allPieces, testIfPiece(oldPos.X - 1, oldPos.Y)); boardArray[findBoardSpot(oldPos.X - 1, oldPos.Y)].BackgroundImage.Dispose(); boardArray[findBoardSpot(oldPos.X - 1, oldPos.Y)].BackgroundImage = null; legal = true; }
-                    //    if (deltaY == 1 && deltaX == 1 && testIfPiece(oldPos.X + 1, oldPos.Y) != 99 && allPieces[testIfPiece(oldPos.X + 1, oldPos.Y)].Position.Y == 4 && allPieces[testIfPiece(oldPos.X + 1, oldPos.Y)].Moves == 1 && newPos.X == allPieces[testIfPiece(oldPos.X + 1, oldPos.Y)].Position.X && (gameMoves - allPieces[testIfPiece(oldPos.X + 1, oldPos.Y)].LastMove < 2)) { allPieces[spotInPieceArray].Position = newPos; allPieces = removePiece(allPieces, testIfPiece(oldPos.X + 1, oldPos.Y)); boardArray[findBoardSpot(oldPos.X + 1, oldPos.Y)].BackgroundImage.Dispose(); boardArray[findBoardSpot(oldPos.X + 1, oldPos.Y)].BackgroundImage = null; legal = true; }
-
-                    //    if (newPos.Y == 7) promote = true;
-                    //}
+                case Type.Pawn:
                     int decider = 1; if (!piece.Color) decider = -1;
                     int xmove = 1; if (newPos.X - oldPos.X == -1) xmove = -1;
 
@@ -505,15 +372,6 @@ namespace Chess
                         boardArray[findBoardSpot(oldPos.X + xmove, oldPos.Y)].BackgroundImage.Dispose(); 
                         boardArray[findBoardSpot(oldPos.X + xmove, oldPos.Y)].BackgroundImage = null;
                     }
-                    //if (oldPos.Y + decider == newPos.Y && deltaX == 1 && testIfPiece(oldPos.X - 1, oldPos.Y) != 99 && allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].Color != piece.Color && allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].Moves == 1 && (gameMoves - allPieces[testIfPiece(oldPos.X - 1, oldPos.Y)].LastMove < 2))
-                    //{
-                    //    legal = true;
-                    //    allPieces = removePiece(allPieces, testIfPiece(oldPos.X - 1, oldPos.Y));
-                    //    boardArray[findBoardSpot(oldPos.X - 1, oldPos.Y)].BackgroundImage.Dispose();
-                    //    boardArray[findBoardSpot(oldPos.X - 1, oldPos.Y)].BackgroundImage = null;
-                    //}
-                    
-                    //if (newPos.Y == 3.5 + decider * 3 + (double)decider / 2) promote = true;
                     break;
                 case Type.Knight:
                     if (Math.Abs(newPos.X - oldPos.X) == 2 && Math.Abs(newPos.Y - oldPos.Y) == 1) legal = true;
@@ -588,9 +446,9 @@ namespace Chess
             }
             return legal;
         }
-        private Pieces[] removePiece(Pieces[] array, int removeAt) // poss removable
+        private Pieces[] removePiece(Pieces[] array, int removeAt) 
         {
-            array = array.Where((source, index) => index != removeAt).ToArray(); //INSTEA OF CALLING THIS METHOD            
+            array = array.Where((source, index) => index != removeAt).ToArray();        
             return array;
         }
         private void win()
@@ -652,22 +510,22 @@ namespace Chess
                 case "queen":
                     allPieces[spotInPieceArray].Type = Type.Queen;
                     assignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
-                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);//issue is prob that temp is clone of an outdated and updated piece
+                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
                     break;
                 case "rook":
                     allPieces[spotInPieceArray].Type = Type.Rook;
                     assignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
-                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);//issue is prob that temp is clone of an outdated and updated piece
+                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
                     break;
                 case "bishop":
                     allPieces[spotInPieceArray].Type = Type.Bishop;
                     assignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
-                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);//issue is prob that temp is clone of an outdated and updated piece
+                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
                     break;
                 case "knight":
                     allPieces[spotInPieceArray].Type = Type.Knight;
                     assignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
-                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);//issue is prob that temp is clone of an outdated and updated piece
+                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
                     break;
             }
         }
