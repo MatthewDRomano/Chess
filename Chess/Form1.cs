@@ -283,7 +283,7 @@ namespace Chess
                     Point[] holder = allLegalMoves(allPieces[i]);
                     count += holder.Length;
                 }
-                if (count == 0) win();
+                if (count == 0) win(temp.Color);
                 refreshHighlights();
                 boardArray[prevNew].BackColor = Color.FromArgb(247, 247, 105);
                 boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105);
@@ -451,24 +451,40 @@ namespace Chess
             array = array.Where((source, index) => index != removeAt).ToArray();        
             return array;
         }
-        private void win()
+        private void win(bool color)// maybe have set pictureboxes and stuff premade on Form1.cs [Design]* then fill in accoridng to how game ends
         {
             haltMove = true;
-            foreach (Pieces piece in allPieces)
-            {
-                if (piece.Type == Type.King)
-                {
-                    label18.Visible = true;
-                    label19.Visible = true;
-                    pictureBox3.Visible = true;
-                    pictureBox1.Visible = true;
-                    pictureBox2.Visible = true;                                      
+            PictureBox winningBox = new PictureBox();
+            this.Controls.Add(winningBox);
+            winningBox.Location = new Point(150, 250);
+            winningBox.Size = new Size(500, 300);
+            winningBox.BringToFront();
 
-                    if (piece.Color) { label18.Text = "Black Wins!"; pictureBox1.BackgroundImage = Properties.Resources.bigBlackKing; pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;}
-                    else if (!piece.Color) { label18.Text = "White Wins!"; pictureBox1.BackgroundImage = Properties.Resources.bigWhiteKing; pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;}
-                    label19.Text = "Press 'X' to play again!";
-                }
-            }
+            Rectangle r = new Rectangle(0, 0, winningBox.Width, winningBox.Height);
+            System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
+            int d = 22;
+            gp.AddArc(r.X, r.Y, d, d, 180, 90);
+            gp.AddArc(r.X + r.Width - d, r.Y, d, d, 270, 90);
+            gp.AddArc(r.X + r.Width - d, r.Y + r.Height - d, d, d, 0, 90);
+            gp.AddArc(r.X, r.Y + r.Height - d, d, d, 90, 90);
+            winningBox.Region = new Region(gp);
+
+            Label winMsg = new Label();
+            this.Controls.Add(winMsg);
+            String msg = ""; if (color) msg = "Black Won!"; else if (!color) msg = "White Won!";
+            winMsg.Location = new Point(360, (int)(winningBox.Location.Y * 1.125));
+            winMsg.BringToFront();
+            winMsg.Text = msg;
+            Font ltrFont = new Font("Arial", 12);
+            winMsg.Font = ltrFont;
+
+            PictureBox exitBox = new PictureBox();
+            this.Controls.Add(exitBox);
+            exitBox.Location = new Point(winningBox.Location.X + winningBox.Width - 50, winningBox.Location.Y + 50);
+            exitBox.Size = new Size(50, 50);
+            exitBox.BringToFront();
+            exitBox.BackgroundImage = Properties.Resources.gryCirc;// change to X
+
         }
         private void promoteBoard()
         {

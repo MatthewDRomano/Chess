@@ -29,7 +29,6 @@ namespace Chess
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -51,11 +50,6 @@ namespace Chess
             this.bishop = new System.Windows.Forms.Button();
             this.rook = new System.Windows.Forms.Button();
             this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.F1 = new System.Windows.Forms.PictureBox();
             this.H1 = new System.Windows.Forms.PictureBox();
             this.D1 = new System.Windows.Forms.PictureBox();
@@ -120,9 +114,6 @@ namespace Chess
             this.H8 = new System.Windows.Forms.PictureBox();
             this.B7 = new System.Windows.Forms.PictureBox();
             this.A8 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.F1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.H1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.D1)).BeginInit();
@@ -397,59 +388,6 @@ namespace Chess
             this.label17.Size = new System.Drawing.Size(229, 100);
             this.label17.TabIndex = 82;
             this.label17.Text = "Which piece do you want to move: (Ex: \'A2\')";
-            // 
-            // label18
-            // 
-            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(316, 151);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(167, 38);
-            this.label18.TabIndex = 92;
-            this.label18.Text = "label18";
-            this.label18.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.label18.Visible = false;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(343, 190);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(41, 13);
-            this.label19.TabIndex = 94;
-            this.label19.Text = "label19";
-            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label19.Visible = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
-            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox3.Location = new System.Drawing.Point(550, 125);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(25, 25);
-            this.pictureBox3.TabIndex = 93;
-            this.pictureBox3.TabStop = false;
-            this.pictureBox3.Visible = false;
-            this.pictureBox3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.restartGame);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Location = new System.Drawing.Point(225, 125);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(350, 92);
-            this.pictureBox2.TabIndex = 91;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Visible = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.Location = new System.Drawing.Point(225, 190);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(350, 469);
-            this.pictureBox1.TabIndex = 90;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Visible = false;
             // 
             // F1
             // 
@@ -1224,11 +1162,6 @@ namespace Chess
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1104, 881);
-            this.Controls.Add(this.label19);
-            this.Controls.Add(this.pictureBox3);
-            this.Controls.Add(this.label18);
-            this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.rook);
             this.Controls.Add(this.bishop);
             this.Controls.Add(this.knight);
@@ -1318,9 +1251,6 @@ namespace Chess
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Chess Game";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.F1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.H1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.D1)).EndInit();
@@ -1386,7 +1316,6 @@ namespace Chess
             ((System.ComponentModel.ISupportInitialize)(this.B7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.A8)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -1476,11 +1405,6 @@ namespace Chess
         private System.Windows.Forms.Button bishop;
         private System.Windows.Forms.Button rook;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.Label label19;
     }
 }
 
