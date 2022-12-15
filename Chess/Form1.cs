@@ -19,8 +19,8 @@ namespace Chess
         King,
         Queen
     }
-    public partial class Form1 : Form 
-    {//make pBoxClick better// all methods of drawing (stalemate...etc) // winning screen// clean up castle
+    public partial class Form1 : Form
+    {// all methods of drawing (stalemate...etc) //winning screen / main menu // timer?
         PictureBox[] boardArray;
         Pieces[] allPieces;
         Point oldPos;
@@ -29,8 +29,8 @@ namespace Chess
         bool promote, haltMove = false;
         bool check = false;
         int spotInPieceArray;
-        int gameMoves = 0;
-        int prevOld, prevNew, prevCheck;
+        int gameMoves = 0, fiftyMoveBreaker = 0;
+        int prevOld, prevNew, prevCheck;//make array Exclusions[]
         Color ogColor;
         public Form1()
         {
@@ -38,7 +38,7 @@ namespace Chess
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            boardArray = initializeBoardArray();
+            boardArray = InitializeBoardArray();
             allPieces = new Pieces[32];
             if (true)
             {
@@ -78,19 +78,14 @@ namespace Chess
                 allPieces[31] = new Pieces(Type.Rook, false, new Point(7, 7));
             }//fills allPieces array full of all pieces. Just use if to minimize
         }
-        private PictureBox[] initializeBoardArray()
+        private PictureBox[] InitializeBoardArray()
         {
             PictureBox[] boardArray = new PictureBox[64];
             foreach (PictureBox pb in this.Controls.OfType<PictureBox>())
-            {
-                if (pb.Tag != null)
-                {
-                    boardArray[Convert.ToInt32(pb.Tag.ToString()[1] - '0') * 8 + Convert.ToInt32(pb.Tag.ToString()[0] - '0')] = pb; // the command after if statement is wrong }
-                }
-            }
+                if (pb.Tag != null) boardArray[Convert.ToInt32(pb.Tag.ToString()[1] - '0') * 8 + Convert.ToInt32(pb.Tag.ToString()[0] - '0')] = pb; 
             return boardArray;
         }
-        private void assignImage(bool color, Type typeOfPiece, int i)
+        private void AssignImage(bool color, Type typeOfPiece, int i)
         {
             switch (color)
             {
@@ -113,81 +108,73 @@ namespace Chess
             }
             boardArray[i].BackgroundImageLayout = ImageLayout.Stretch;
         }
-        private int findPiece(int x = 99,  int y = 99) // if no ints are sent for a position then it defaults to returning position of moved piece (oldPos)
+        private int FindPiece(int x = 99, int y = 99)
         {
-            int q = 99;
             for (int i = 0; i < allPieces.Length; i++)
             {
-                if (x == 99 && y == 99 && allPieces[i].Position == oldPos) q = i;
-                else if (allPieces[i].Position == new Point(x, y) && i != spotInPieceArray) q = i;
-            }
-            return q;
+                if (x == 99 && y == 99 && allPieces[i].Position == oldPos) return i;
+                else if (allPieces[i].Position == new Point(x, y) && i != spotInPieceArray) return i;
+            } 
+            return 99;
         }
-        private int findBoardSpot(int x,int y)
+        private int FindBoardSpot(int x, int y)
         {
-            int q = 0;
-            for (int i = 0; i < boardArray.Length; i++)
-            {
-                if (x * 100 == boardArray[i].Location.X && y * 100 == boardArray[i].Location.Y)
-                {
-                    q = i;
-                }
-            }
-            return q;
+            for (int i = 0; i < boardArray.Length; i++)            
+                if (x * 100 == boardArray[i].Location.X && y * 100 == boardArray[i].Location.Y) return i;          
+            return 0;
         }
         private void pBoxClick(object sender, MouseEventArgs e)
         {
-
             if (promote || haltMove) return; // if pawn can be promoted moves cannot be done until it is promoted
 
-            PictureBox myBox = (PictureBox)sender;        
+            PictureBox myBox = (PictureBox)sender;
             if (!canMove)
             {
                 String temp = myBox.Tag.ToString();
                 oldPos = new Point(Convert.ToInt32(temp[0] - '0'), Convert.ToInt32(temp[1] - '0'));
-                int q = findBoardSpot(oldPos.X, oldPos.Y);
-              if (boardArray[q].BackgroundImage == null) { return; }
-              if (gameMoves % 2 == 0 && allPieces[findPiece()].Color) return; // if its black on even moves it returns;
-              else if (gameMoves % 2 == 1 && !allPieces[findPiece()].Color) return;// if its white on odd moves it returns;
+                int q = FindBoardSpot(oldPos.X, oldPos.Y);
+                if (boardArray[q].BackgroundImage == null) return; 
+                if (gameMoves % 2 == 0 && allPieces[FindPiece()].Color) return; // if its black on even moves it returns;
+                else if (gameMoves % 2 == 1 && !allPieces[FindPiece()].Color) return;// if its white on odd moves it returns;
                 //           
                 ogColor = boardArray[q].BackColor;
                 boardArray[q].BackColor = Color.FromArgb(247, 247, 105);
-                showLegals();
+                ShowLegals();
                 canMove = true;
                 return;
             }
             else if (canMove)
             {
-                refreshLegals();
+                RefreshLegals();
                 String temp = myBox.Tag.ToString();
-                newPos = new Point(Convert.ToInt32(temp[0]  - '0'), Convert.ToInt32(temp[1] - '0'));
-                spotInPieceArray = findPiece();
-              if (!Legal(allPieces[spotInPieceArray])) { refreshHighlights(); if (gameMoves > 0) { boardArray[prevNew].BackColor = Color.FromArgb(247, 247, 105); boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105); if (check) { boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59); } } canMove = false; return; }// legal switch statement                
-              if (checkpreventsMove(allPieces[spotInPieceArray])) { refreshHighlights(); if (gameMoves > 0) { boardArray[prevNew].BackColor = Color.FromArgb(247, 247, 105); boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105); if (check) { boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59); } } canMove = false; return; }
-              if (newPos == oldPos) { boardArray[findBoardSpot(oldPos.X, oldPos.Y)].BackColor = ogColor; canMove = false; return; }//redundant but pieces' highlights bug if not here
-              if (findPiece(newPos.X, newPos.Y) != 99 && allPieces[findPiece()].Color == allPieces[findPiece(newPos.X, newPos.Y)].Color) { boardArray[findBoardSpot(oldPos.X, oldPos.Y)].BackColor = ogColor; canMove = false; return; }              
-                int q = findBoardSpot(newPos.X, newPos.Y);
-                refreshHighlights(findBoardSpot(oldPos.X, oldPos.Y), q);
+                newPos = new Point(Convert.ToInt32(temp[0] - '0'), Convert.ToInt32(temp[1] - '0'));
+                spotInPieceArray = FindPiece();
+                if (!Legal(allPieces[spotInPieceArray])) { RefreshHighlights(); if (gameMoves > 0) { boardArray[prevNew].BackColor = Color.FromArgb(247, 247, 105); boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105); if (check) { boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59); } } canMove = false; return; }// legal switch statement                
+                if (CheckPreventsMove(allPieces[spotInPieceArray])) { RefreshHighlights(); if (gameMoves > 0) { boardArray[prevNew].BackColor = Color.FromArgb(247, 247, 105); boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105); if (check) { boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59); } } canMove = false; return; }
+                if (newPos == oldPos) { boardArray[FindBoardSpot(oldPos.X, oldPos.Y)].BackColor = ogColor; canMove = false; return; }//redundant but pieces' highlights bug if not here
+                if (FindPiece(newPos.X, newPos.Y) != 99 && allPieces[FindPiece()].Color == allPieces[FindPiece(newPos.X, newPos.Y)].Color) { boardArray[FindBoardSpot(oldPos.X, oldPos.Y)].BackColor = ogColor; canMove = false; return; }
+                int q = FindBoardSpot(newPos.X, newPos.Y);
+                RefreshHighlights(FindBoardSpot(oldPos.X, oldPos.Y), q);
                 boardArray[q].BackColor = Color.FromArgb(247, 247, 105);
                 canMove = false;
-                          
-                doMove();
+
+                DoMove();
             }
         }
-        private void refreshHighlights(int one = 99, int two = 99)//issue: column 1 doesn't work right
+        private void RefreshHighlights(int one = 99, int two = 99)//issue: column 1 doesn't work right
         {
-            int count = 1;
+            bool even = false;
             for (int i = 0; i < boardArray.Length; i++)
             {
-                if (i % 8 == 0 && (i == one || i == two)) continue; 
-                else if (i == one || i == two) { count *= -1; continue; }
+                if (i % 8 == 0 && (i == one || i == two)) continue;
+                else if (i == one || i == two) { even =  !even; continue; }
 
-                if (i % 8 == 0) count *= -1;
-                if (count == 1) { boardArray[i].BackColor = Color.FromArgb(238, 238, 210); count *= -1; continue; }
-                else if (count == -1) { boardArray[i].BackColor = Color.FromArgb(118, 150, 86); count *= -1; }
+                if (i % 8 == 0) even = !even;
+                if (!even) { boardArray[i].BackColor = Color.FromArgb(238, 238, 210); even = !even; continue; }
+                else if (even) { boardArray[i].BackColor = Color.FromArgb(118, 150, 86); even = !even; }
             }
         }
-        private void showLegals()
+        private void ShowLegals()
         {
             for (int i = 0; i < 8; i++)
             {
@@ -195,61 +182,61 @@ namespace Chess
                 {
                     newPos = new Point(i, q);
                     spotInPieceArray = 999;
-                    if (Legal(allPieces[findPiece()], true))//maybe add 'true' argument for sim
+                    if (Legal(allPieces[FindPiece()], true))
                     {
-                        spotInPieceArray = findPiece();
-                        if (checkpreventsMove(allPieces[findPiece()])) continue;
-                        if (boardArray[findBoardSpot(newPos.X, newPos.Y)].BackgroundImage != null) 
-                        { 
-                            boardArray[findBoardSpot(newPos.X, newPos.Y)].Image = Properties.Resources.finalCirc;                           
-                            continue; 
+                        spotInPieceArray = FindPiece();
+                        if (CheckPreventsMove(allPieces[spotInPieceArray])) continue;
+                        if (boardArray[FindBoardSpot(i, q)].BackgroundImage != null)
+                        {
+                            boardArray[FindBoardSpot(i, q)].Image = Properties.Resources.finalCirc;
+                            continue;
                         }
-                        boardArray[findBoardSpot(newPos.X, newPos.Y)].BackgroundImage = Properties.Resources.gryCirc;
-                        boardArray[findBoardSpot(newPos.X, newPos.Y)].BackgroundImageLayout = ImageLayout.Stretch;
+                        boardArray[FindBoardSpot(i, q)].BackgroundImage = Properties.Resources.gryCirc;
+                        boardArray[FindBoardSpot(i, q)].BackgroundImageLayout = ImageLayout.Stretch;
                     }
                 }
             }
         }
-        private void refreshLegals()
+        private void RefreshLegals()
         {
-            //spotInPieceArray = 999;
             for (int i = 0; i < boardArray.Length; i++)
-            {                   
+            {
                 if (boardArray[i].Image != null) { boardArray[i].Image.Dispose(); boardArray[i].Image = null; }
-                if (findPiece(boardArray[i].Location.X / 100, boardArray[i].Location.Y / 100) == 99 && boardArray[i].BackgroundImage != null)
+                if (FindPiece(boardArray[i].Location.X / 100, boardArray[i].Location.Y / 100) == 99 && boardArray[i].BackgroundImage != null && !check)//!chekc fixes issue with king on square 62 going away in check
                 {
                     boardArray[i].BackgroundImage.Dispose();
                     boardArray[i].BackgroundImage = null;
                 }
             }
         }
-        private bool checkpreventsMove(Pieces piece)
+        private bool CheckPreventsMove(Pieces piece)
         {
             Point oldold = oldPos, tempPos = allPieces[spotInPieceArray].Position;
             oldPos = newPos;
             allPieces[spotInPieceArray].Position = newPos;
             check = false;
-            if (ifCheck(piece, piece.Color))
+            if (IfCheck(piece, piece.Color))
             {
-                refreshHighlights();
+                RefreshHighlights();
                 boardArray[prevNew].BackColor = Color.FromArgb(247, 247, 105);
                 boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105);
                 allPieces[spotInPieceArray].Position = tempPos; oldPos = oldold;
-                if (piece.Type == Type.King) prevCheck = findBoardSpot(oldold.X, oldold.Y);
+                if (piece.Type == Type.King) prevCheck = FindBoardSpot(oldold.X, oldold.Y);
                 boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
-                boardArray[findBoardSpot(oldPos.X, oldPos.Y)].BackColor = Color.FromArgb(247, 247, 105);
+                boardArray[FindBoardSpot(oldPos.X, oldPos.Y)].BackColor = Color.FromArgb(247, 247, 105);
                 return true;
-            }           
+            }
             oldPos = oldold; allPieces[spotInPieceArray].Position = tempPos;
             return false;
         }
-        private void doMove()
-        {           
-            spotInPieceArray = findPiece(); // finds moved piece in piece array
+        private void DoMove()
+        {
+            fiftyMoveBreaker++;
+            spotInPieceArray = FindPiece(); // finds moved piece in piece array
             Pieces temp = allPieces[spotInPieceArray];
-            
-            int oldSpotInBoardArray = findBoardSpot(oldPos.X, oldPos.Y); // spot in boardArray of old location
-            int newSpotInBoardArray = findBoardSpot(newPos.X, newPos.Y); // spot in boardArray of new location        
+
+            int oldSpotInBoardArray = FindBoardSpot(oldPos.X, oldPos.Y); // spot in boardArray of old location
+            int newSpotInBoardArray = FindBoardSpot(newPos.X, newPos.Y); // spot in boardArray of new location        
 
             prevOld = oldSpotInBoardArray;
             prevNew = newSpotInBoardArray;
@@ -260,77 +247,76 @@ namespace Chess
             boardArray[oldSpotInBoardArray].BackgroundImage = null;//sets image value to null 
             allPieces[spotInPieceArray].Position = newPos; // updates piece position  
 
-        foreach (Pieces piece in allPieces)//checks for if promotion can happen
-        {
-            if (piece.Type == Type.Pawn)
-            {
-                if ((piece.Color && piece.Position.Y == 7) || (!piece.Color && piece.Position.Y == 0)) { haltMove = true; promoteBoard(); }
-            }          
-        }
-        if (findPiece(newPos.X, newPos.Y) != 99) { allPieces = removePiece(allPieces, findPiece(newPos.X, newPos.Y)); }
+            foreach (Pieces piece in allPieces) if (piece.Type == Type.Pawn)//checks for if promotion can happen
+            {               
+                if ((piece.Color && piece.Position.Y == 7) || (!piece.Color && piece.Position.Y == 0)) { haltMove = true; PromoteBoard(); }                
+            }
 
-            assignImage(temp.Color, temp.Type, newSpotInBoardArray);
-            gameMoves++;
+            if (FindPiece(newPos.X, newPos.Y) != 99) { allPieces = RemovePiece(allPieces, FindPiece(newPos.X, newPos.Y)); fiftyMoveBreaker = 0; }
+
+            AssignImage(temp.Color, temp.Type, newSpotInBoardArray);
             
-        if (ifCheck()) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
-            if (check)
+            gameMoves++;
+
+            if (IfCheck()) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
+            if (check)//checkmate
             {
                 int count = 0;
                 for (int i = 0; i < allPieces.Length; i++)
                 {
                     if (allPieces[i].Color == temp.Color) continue;
                     spotInPieceArray = i;
-                    Point[] holder = allLegalMoves(allPieces[i]);
+                    Point[] holder = AllLegalMoves(allPieces[i]);
                     count += holder.Length;
                 }
-                if (count == 0) win(temp.Color);
-                refreshHighlights();
+                if (count == 0) Win(temp.Color);
+                RefreshHighlights();
                 boardArray[prevNew].BackColor = Color.FromArgb(247, 247, 105);
                 boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105);
                 boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
             }
-            //else if (!check)
-            //{
-            //    int count = 0;
-            //    for (int i = 0; i < allPieces.Length; i++)
-            //    {
-            //        if (allPieces[i].Color == temp.Color) continue;
-            //        spotInPieceArray = i;
-            //        Point[] holder = allLegalMoves(allPieces[i]);
-            //        count += holder.Length;
-            //    }
-            //    if (count == 0) label17.Text = "Draw";
-            //    refreshHighlights();
-            //    boardArray[prevNew].BackColor = Color.FromArgb(247, 247, 105);
-            //    boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105);
-            //    if (check) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);                             
-            //}
-        }
-        private bool ifCheck(Pieces movedPiece = null, bool? curCol = null)
-        {
-            foreach (Pieces piece in allPieces)
+            else if (!check)//stalemate
             {
-                if (piece.Type == Type.King)
+                int count = 0;
+                for (int i = 0; i < allPieces.Length; i++)
                 {
-                    if (curCol != null && piece.Color != curCol) continue;
-
-                    Sim sim1 = new Sim(allPieces, oldPos, gameMoves);//
-                    promote = true;//
-                    if (sim1.underAttack(piece.Position, allPieces, piece, movedPiece))//
-                    {
-                        promote = false;
-                        label17.Text = "CHECK!";
-                        boardArray[findBoardSpot(piece.Position.X, piece.Position.Y)].BackColor = Color.FromArgb(237, 59, 59);
-                        prevCheck = findBoardSpot(piece.Position.X, piece.Position.Y);
-                        return check = true;
-                    }
-                    else label17.Text = "No longer in check!";
-                    promote = false;//
+                    if (allPieces[i].Color == temp.Color) continue;
+                    spotInPieceArray = i;
+                    Point[] holder = AllLegalMoves(allPieces[i]);
+                    count += holder.Length;
                 }
+                if (count == 0) label17.Text = "Draw";
+                RefreshHighlights();
+                boardArray[prevNew].BackColor = Color.FromArgb(247, 247, 105);
+                boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105);
+                if (check) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
+            }
+            //three fold repition (fen String will make this so easy) "CurrentFenString()" OR a Pieces[][] jagged array (array of allPieces[] from each gameMove)
+            //Pieces[(each iteration is an allpieces array)][the allpieces array for that gamemove] 
+            if (fiftyMoveBreaker == 50) { label17.Text = "Draw"; }//50 move rule COMPLETE 
+            //dead position
+        }
+        private bool IfCheck(Pieces movedPiece = null, bool? curCol = null)
+        {
+            foreach (Pieces piece in allPieces) if (piece.Type == Type.King) 
+            {                              
+                if (curCol != null && piece.Color != curCol) continue;
+                Sim sim1 = new Sim(allPieces, oldPos, gameMoves);
+                haltMove = true;
+                if (sim1.underAttack(piece.Position, allPieces, piece, movedPiece))//
+                {
+                    haltMove = false;
+                    label17.Text = "CHECK!";//
+                    boardArray[FindBoardSpot(piece.Position.X, piece.Position.Y)].BackColor = Color.FromArgb(237, 59, 59);
+                    prevCheck = FindBoardSpot(piece.Position.X, piece.Position.Y);
+                    return check = true;
+                }
+                else label17.Text = "Not in check!";//
+                haltMove = false;                
             }
             return check = false;
         }
-        private Point[] allLegalMoves(Pieces piece)
+        private Point[] AllLegalMoves(Pieces piece)
         {
             Point[] array = new Point[0];
             for (int i = 0; i < 8; i++)
@@ -339,9 +325,9 @@ namespace Chess
                 {
                     newPos = new Point(i, q);
                     oldPos = piece.Position;
-                    if (Legal(piece, true) && !checkpreventsMove(piece))
+                    if (Legal(piece, true) && !CheckPreventsMove(piece))
                     {
-                        Array.Resize(ref array, array.Length+1);
+                        Array.Resize(ref array, array.Length + 1);
                         array[array.Length - 1] = newPos;
                     }
                 }
@@ -351,8 +337,8 @@ namespace Chess
         private bool Legal(Pieces piece, bool sim = false)
         {
             bool legal = false;
-            if (findPiece(newPos.X, newPos.Y) != 99 && allPieces[findPiece(newPos.X, newPos.Y)].Color == piece.Color) return legal = false;
-            if (newPos == oldPos) return legal = false;
+            if (FindPiece(newPos.X, newPos.Y) != 99 && allPieces[FindPiece(newPos.X, newPos.Y)].Color == piece.Color) return legal;
+            if (newPos == oldPos) return legal;
             int deltaX = Math.Abs(newPos.X - oldPos.X), deltaY = Math.Abs(newPos.Y - oldPos.Y);
 
             switch (piece.Type)
@@ -361,17 +347,18 @@ namespace Chess
                     int decider = 1; if (!piece.Color) decider = -1;
                     int xmove = 1; if (newPos.X - oldPos.X == -1) xmove = -1;
 
-                    if (oldPos.Y + decider == newPos.Y && deltaX == 0 && findPiece(newPos.X, newPos.Y) == 99) legal = true; // 1 move
-                    if (piece.Moves == 0 && newPos.Y == 3.5 - (double)decider / 2 && deltaX == 0 && deltaY == 2 && findPiece(newPos.X, newPos.Y) == 99 && findPiece(newPos.X, newPos.Y-decider) == 99) { piece.LastMove = gameMoves; legal = true; } // 2 move
-                    if (oldPos.Y + decider == newPos.Y && deltaX == 1 && findPiece(newPos.X, newPos.Y) != 99 && allPieces[findPiece(newPos.X, newPos.Y)].Color != piece.Color) legal = true; //take
-                    if (oldPos.Y + decider == newPos.Y && deltaX == 1 && findPiece(oldPos.X + xmove, oldPos.Y) != 99 && allPieces[findPiece(oldPos.X + xmove, oldPos.Y)].Color != piece.Color && allPieces[findPiece(oldPos.X + xmove, oldPos.Y)].Moves == 1 && (gameMoves - allPieces[findPiece(oldPos.X + xmove, oldPos.Y)].LastMove < 2))
+                    if (oldPos.Y + decider == newPos.Y && deltaX == 0 && FindPiece(newPos.X, newPos.Y) == 99) legal = true; // 1 move
+                    if (piece.Moves == 0 && newPos.Y == 3.5 - (double)decider / 2 && deltaX == 0 && deltaY == 2 && FindPiece(newPos.X, newPos.Y) == 99 && FindPiece(newPos.X, newPos.Y - decider) == 99) { piece.LastMove = gameMoves; legal = true; } // 2 move
+                    if (oldPos.Y + decider == newPos.Y && deltaX == 1 && FindPiece(newPos.X, newPos.Y) != 99 && allPieces[FindPiece(newPos.X, newPos.Y)].Color != piece.Color) legal = true; //take
+                    if (oldPos.Y + decider == newPos.Y && deltaX == 1 && FindPiece(oldPos.X + xmove, oldPos.Y) != 99 && allPieces[FindPiece(oldPos.X + xmove, oldPos.Y)].Color != piece.Color && allPieces[FindPiece(oldPos.X + xmove, oldPos.Y)].Moves == 1 && (gameMoves - allPieces[FindPiece(oldPos.X + xmove, oldPos.Y)].LastMove < 2))
                     {
                         legal = true;
-                        if (sim) return legal; 
-                        allPieces = removePiece(allPieces, findPiece(oldPos.X + xmove, oldPos.Y)); 
-                        boardArray[findBoardSpot(oldPos.X + xmove, oldPos.Y)].BackgroundImage.Dispose(); 
-                        boardArray[findBoardSpot(oldPos.X + xmove, oldPos.Y)].BackgroundImage = null;
+                        if (sim) return legal;
+                        allPieces = RemovePiece(allPieces, FindPiece(oldPos.X + xmove, oldPos.Y));
+                        boardArray[FindBoardSpot(oldPos.X + xmove, oldPos.Y)].BackgroundImage.Dispose();
+                        boardArray[FindBoardSpot(oldPos.X + xmove, oldPos.Y)].BackgroundImage = null;
                     }
+                    if (!sim && legal) fiftyMoveBreaker = -1;//doMove makes this 0 by adding 1
                     break;
                 case Type.Knight:
                     if (Math.Abs(newPos.X - oldPos.X) == 2 && Math.Abs(newPos.Y - oldPos.Y) == 1) legal = true;
@@ -390,11 +377,11 @@ namespace Chess
                             else if (newPos.X > oldPos.X) x--;
                             if (newPos.Y > oldPos.Y) y--;
                             else if (newPos.Y < oldPos.Y) y++;
-                            if (findPiece(x, y) != 99 && new Point(x,y) != oldPos) { legal = false; break; }
+                            if (FindPiece(x, y) != 99 && new Point(x, y) != oldPos) { legal = false; break; }
                         }
                     }
                     break;
-                case Type.King:                   
+                case Type.King:
                     if (Math.Abs(newPos.X - oldPos.X) == 1 && Math.Abs(newPos.Y - oldPos.Y) == 1) legal = true;
                     if (Math.Abs(newPos.X - oldPos.X) == 0 && Math.Abs(newPos.Y - oldPos.Y) == 1) legal = true;
                     if (Math.Abs(newPos.X - oldPos.X) == 1 && Math.Abs(newPos.Y - oldPos.Y) == 0) legal = true;
@@ -402,56 +389,55 @@ namespace Chess
                     if (piece.Moves == 0 && deltaX == 2 && deltaY == 0)
                     {
                         Sim checkSim = new Sim(allPieces, oldPos, gameMoves);
-                        if (newPos.X - 2 == oldPos.X && findPiece(7, newPos.Y) != 99 && allPieces[findPiece(7, newPos.Y)].Moves == 0 && findPiece(6, newPos.Y) == 99 && findPiece(5, newPos.Y) == 99)
+                        if (newPos.X - 2 == oldPos.X && FindPiece(7, newPos.Y) != 99 && allPieces[FindPiece(7, newPos.Y)].Moves == 0 && FindPiece(6, newPos.Y) == 99 && FindPiece(5, newPos.Y) == 99)
                         {
                             if (!checkSim.underAttack(piece.Position, allPieces, piece))
                             {
                                 piece.Position = new Point(6, newPos.Y); if (!checkSim.underAttack(piece.Position, allPieces, piece))
-                                { piece.Position = new Point(5, newPos.Y); if (!checkSim.underAttack(piece.Position, allPieces, piece)) 
+                                {
+                                    piece.Position = new Point(5, newPos.Y); if (!checkSim.underAttack(piece.Position, allPieces, piece))
                                     {
-                                        legal = true; 
+                                        legal = true;
                                         piece.Position = oldPos;
                                         if (sim) return legal;
-                                        allPieces[findPiece(7, newPos.Y)].Moves++;
-                                        allPieces[findPiece(7, newPos.Y)].Position = new Point(5, newPos.Y);                                       
-                                        boardArray[findBoardSpot(7, newPos.Y)].BackgroundImage.Dispose();// removes visual image
-                                        boardArray[findBoardSpot(7, newPos.Y)].BackgroundImage = null;
-                                        assignImage(piece.Color, Type.Rook, findBoardSpot(5, newPos.Y)); // creates image
-                                    } 
+                                        allPieces[FindPiece(7, newPos.Y)].Moves++;
+                                        allPieces[FindPiece(7, newPos.Y)].Position = new Point(5, newPos.Y);
+                                        boardArray[FindBoardSpot(7, newPos.Y)].BackgroundImage.Dispose();// removes visual image
+                                        boardArray[FindBoardSpot(7, newPos.Y)].BackgroundImage = null;
+                                        AssignImage(piece.Color, Type.Rook, FindBoardSpot(5, newPos.Y)); // creates image
+                                    }
                                 }
                             }
                         }
-                        else if (newPos.X + 2 == oldPos.X && findPiece(0, newPos.Y) != 99 && allPieces[findPiece(0, newPos.Y)].Moves == 0 && findPiece(1, newPos.Y) == 99 && findPiece(2, newPos.Y) == 99)
+                        else if (newPos.X + 2 == oldPos.X && FindPiece(0, newPos.Y) != 99 && allPieces[FindPiece(0, newPos.Y)].Moves == 0 && FindPiece(1, newPos.Y) == 99 && FindPiece(2, newPos.Y) == 99)
                         {
                             if (!checkSim.underAttack(piece.Position, allPieces, piece))
                             {
                                 piece.Position = new Point(1, newPos.Y); if (!checkSim.underAttack(piece.Position, allPieces, piece))
-                                { piece.Position = new Point(2, newPos.Y); if (!checkSim.underAttack(piece.Position, allPieces, piece)) 
-                                    { 
-                                        legal = true; 
+                                {
+                                    piece.Position = new Point(2, newPos.Y); if (!checkSim.underAttack(piece.Position, allPieces, piece))
+                                    {
+                                        legal = true;
                                         piece.Position = oldPos;
                                         if (sim) return legal;
-                                        allPieces[findPiece(0, newPos.Y)].Moves++;
-                                        allPieces[findPiece(0, newPos.Y)].Position = new Point(3, newPos.Y);                                       
-                                        boardArray[findBoardSpot(0, newPos.Y)].BackgroundImage.Dispose();// removes visual image
-                                        boardArray[findBoardSpot(0, newPos.Y)].BackgroundImage = null;
-                                        assignImage(piece.Color, Type.Rook, findBoardSpot(3, newPos.Y)); // creates image
-                                    } 
+                                        allPieces[FindPiece(0, newPos.Y)].Moves++;
+                                        allPieces[FindPiece(0, newPos.Y)].Position = new Point(3, newPos.Y);
+                                        boardArray[FindBoardSpot(0, newPos.Y)].BackgroundImage.Dispose();// removes visual image
+                                        boardArray[FindBoardSpot(0, newPos.Y)].BackgroundImage = null;
+                                        AssignImage(piece.Color, Type.Rook, FindBoardSpot(3, newPos.Y)); // creates image
+                                    }
                                 }
                             }
                         }
                         piece.Position = oldPos;
                     }
+                    
                     break;
             }
             return legal;
         }
-        private Pieces[] removePiece(Pieces[] array, int removeAt) 
-        {
-            array = array.Where((source, index) => index != removeAt).ToArray();        
-            return array;
-        }
-        private void win(bool color)// maybe have set pictureboxes and stuff premade on Form1.cs [Design]* then fill in accoridng to how game ends
+        private Pieces[] RemovePiece(Pieces[] array, int removeAt) { return array = array.Where((source, index) => index != removeAt).ToArray(); }
+        private void Win(bool color)// maybe have set pictureboxes and stuff premade on Form1.cs [Design]* then fill in accoridng to how game ends
         {
             haltMove = true;
             PictureBox winningBox = new PictureBox();
@@ -484,9 +470,8 @@ namespace Chess
             exitBox.Size = new Size(50, 50);
             exitBox.BringToFront();
             exitBox.BackgroundImage = Properties.Resources.gryCirc;// change to X
-
         }
-        private void promoteBoard()
+        private void PromoteBoard()
         {
             queen.Visible = true;
             rook.Visible = true;
@@ -512,7 +497,7 @@ namespace Chess
         {
             Button theBox = (Button)sender;
             Pieces placeHolder = allPieces[spotInPieceArray];
-            int newSpotInBoardArray = findBoardSpot(newPos.X, newPos.Y);
+            int newSpotInBoardArray = FindBoardSpot(newPos.X, newPos.Y);
 
             queen.Visible = false;
             rook.Visible = false;
@@ -525,29 +510,26 @@ namespace Chess
             {
                 case "queen":
                     allPieces[spotInPieceArray].Type = Type.Queen;
-                    assignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
-                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
+                    AssignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
+                    if (IfCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
                     break;
                 case "rook":
                     allPieces[spotInPieceArray].Type = Type.Rook;
-                    assignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
-                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
+                    AssignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
+                    if (IfCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
                     break;
                 case "bishop":
                     allPieces[spotInPieceArray].Type = Type.Bishop;
-                    assignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
-                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
+                    AssignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
+                    if (IfCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
                     break;
                 case "knight":
                     allPieces[spotInPieceArray].Type = Type.Knight;
-                    assignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
-                    if (ifCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
+                    AssignImage(placeHolder.Color, placeHolder.Type, newSpotInBoardArray);
+                    if (IfCheck(allPieces[spotInPieceArray])) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
                     break;
             }
         }
-        private void restartGame(object sender, MouseEventArgs e)
-        {
-            Application.Restart();
-        }
+        private void RestartGame(object sender, MouseEventArgs e) { Application.Restart(); }
     }
 }
