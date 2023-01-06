@@ -16,7 +16,7 @@ namespace Chess
         Queen
     }
     public partial class Form1 : Form
-    {//fix findPiece() spotInPieceArray issue (everywhere I have spotInPieceArray = 999 - get rid of it)// make game screen look good (timer display and board w/o letters and stuff)
+    {//fix findPiece() spotInPieceArray issue (everywhere I have spotInPieceArray = 999 - get rid of it) // dead position
 
         #region Instance Variables
         int timerTime, timeCounterW = 0, timeCounterB = 0;
@@ -34,12 +34,15 @@ namespace Chess
         int prevOld, prevNew, prevCheck;//make array Exclusions[]
         Color ogColor;
         String[] gameHistory = new string[0];
+        
+        Pieces castler; Pieces pessanter; //in pseudoFen, if these are not null then fen is updated to include pessant or castle
         #endregion
 
         public Form1(int timerTime)
-        {
+        {          
             this.timerTime = timerTime;
             InitializeComponent();
+            blackResign.Enabled = false;
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -104,11 +107,7 @@ namespace Chess
         #region Timers
         private void blackTimer_Tick(object sender, EventArgs e)//combine?
         {
-            int seconds = ((timerTime * 60) - timeCounterB) % 60;
-            if (seconds < 10 && seconds != 0) label19.Text = (((timerTime * 60) - ++timeCounterB) / 60).ToString() + ":0" + (((timerTime * 60) - timeCounterB) % 60).ToString();
-            else label19.Text = (((timerTime * 60) - ++timeCounterB) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterB) % 60).ToString();
-            //ActiveForm.Text += "\t\t\t\tBlack: " + (((timerTime * 60) - ++timeCounterB) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterB) % 60).ToString();
-            if (timerTime * 60 - timeCounterB == 0) Win("White wins", "ran out of time");
+
         }
         private void whiteTimer_Tick(object sender, EventArgs e)//combine?
         {
@@ -254,6 +253,9 @@ namespace Chess
         }
         private void DoMove()
         {
+            blackResign.Enabled = !blackResign.Enabled;
+            whiteResign.Enabled = !whiteResign.Enabled;
+
             fiftyMoveBreaker++;
             spotInPieceArray = FindPiece(); // finds moved piece in piece array
             Pieces temp = allPieces[spotInPieceArray];
@@ -284,12 +286,12 @@ namespace Chess
             Array.Resize(ref gameHistory, gameHistory.Length + 1);
             gameHistory[gameHistory.Length - 1] = currentPosString();
             int counter2 = 0;
-            for (int i = 0; i < gameHistory.Length; i++) if (gameHistory.Length > 1)//3 fold repition
+            for (int i = 0; i < gameHistory.Length; i++) if (gameHistory.Length > 1)//5 fold repition
                 {
                     if (i == gameHistory.Length - 1) break;
                     if (gameHistory[i] == currentPosString()) counter2++;
                 }
-            if (counter2 == 2) Win("Draw", "By Repition");
+            if (counter2 == 4) Win("Draw", "By Repition");//change the 4 to 2 if you want 3 move rep
 
             if (IfCheck()) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
             if (check)//checkmate
@@ -328,6 +330,7 @@ namespace Chess
             }
             
             if (fiftyMoveBreaker == 50) Win("      Draw", "by 50-Move-Rule");//50 move rule 
+
             //dead position
         }
         #endregion
@@ -409,6 +412,7 @@ namespace Chess
                     if (oldPos.Y + decider == newPos.Y && deltaX == 1 && FindPiece(newPos.X, newPos.Y) != 99 && allPieces[FindPiece(newPos.X, newPos.Y)].Color != piece.Color) legal = true; //take
                     if (oldPos.Y + decider == newPos.Y && deltaX == 1 && FindPiece(oldPos.X + xmove, oldPos.Y) != 99 && allPieces[FindPiece(oldPos.X + xmove, oldPos.Y)].Color != piece.Color && allPieces[FindPiece(oldPos.X + xmove, oldPos.Y)].Moves == 1 && (gameMoves - allPieces[FindPiece(oldPos.X + xmove, oldPos.Y)].LastMove < 2))
                     {
+                        pessanter = piece;
                         legal = true;
                         if (sim) return legal;
                         allPieces = RemovePiece(allPieces, FindPiece(oldPos.X + xmove, oldPos.Y));
@@ -456,12 +460,13 @@ namespace Chess
                                     {
                                         legal = true;
                                         piece.Position = oldPos;
+                                        castler = piece;
                                         if (sim) return legal;
                                         allPieces[FindPiece(7, newPos.Y)].Moves++;
                                         allPieces[FindPiece(7, newPos.Y)].Position = new Point(5, newPos.Y);
                                         boardArray[FindBoardSpot(7, newPos.Y)].BackgroundImage.Dispose();// removes visual image
                                         boardArray[FindBoardSpot(7, newPos.Y)].BackgroundImage = null;
-                                        AssignImage(piece.Color, Type.Rook, FindBoardSpot(5, newPos.Y)); // creates image
+                                        AssignImage(piece.Color, Type.Rook, FindBoardSpot(5, newPos.Y)); // creates image                                       
                                     }
                                 }
                             }
@@ -476,6 +481,7 @@ namespace Chess
                                     {
                                         legal = true;
                                         piece.Position = oldPos;
+                                        castler = piece;
                                         if (sim) return legal;
                                         allPieces[FindPiece(0, newPos.Y)].Moves++;
                                         allPieces[FindPiece(0, newPos.Y)].Position = new Point(3, newPos.Y);
@@ -493,6 +499,13 @@ namespace Chess
             return legal;
         }
         #endregion
+
+        private void Resign(object sender, MouseEventArgs e)
+        {
+            Button button = (Button)sender;
+            if (button.Name == "whiteResign") Win("Black Wins", "by resignation");
+            else if (button.Name == "blackResign") Win("White wins", "by resignation");
+        }
 
         private Pieces[] RemovePiece(Pieces[] array, int removeAt) { return array = array.Where((source, index) => index != removeAt).ToArray(); }
         private void Win(String msg, String smsg, bool? color = null)
@@ -599,7 +612,6 @@ namespace Chess
         }
         #endregion
 
-        private void RestartGame(object sender, MouseEventArgs e) { this.Hide(); menu newMenu = new menu(); newMenu.ShowDialog(); }
         private String currentPosString()//returns string that holds current pos of all pieces
         {
             String pseudoFen = "";
@@ -611,6 +623,11 @@ namespace Chess
                 if (FindPiece(boardArray[i].Location.X / 100, boardArray[i].Location.Y / 100) != 99)
                 {
                     Pieces piece = allPieces[FindPiece(boardArray[i].Location.X / 100, boardArray[i].Location.Y / 100)];
+                    spotInPieceArray = FindPiece(boardArray[i].Location.X / 100, boardArray[i].Location.Y / 100);
+                    AllLegalMoves(piece);
+                    if (castler == piece) pseudoFen += "c";
+                    if (pessanter == piece) pseudoFen += "e";
+
                     switch (piece.Type)
                     {
                         case (Type.Pawn):
@@ -642,7 +659,10 @@ namespace Chess
                 else pseudoFen += "x";
             }
             //label20.Text = pseudoFen;
+            castler = null;
+            pessanter = null;
             return pseudoFen;
         }
+        private void RestartGame(object sender, MouseEventArgs e) { this.Hide(); menu newMenu = new menu(); newMenu.ShowDialog(); }
     }
 }

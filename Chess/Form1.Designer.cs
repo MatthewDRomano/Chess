@@ -100,6 +100,8 @@ namespace Chess
             this.exitBox = new System.Windows.Forms.PictureBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
+            this.blackResign = new System.Windows.Forms.Button();
+            this.whiteResign = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.F1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.H1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.D1)).BeginInit();
@@ -1009,11 +1011,33 @@ namespace Chess
             this.label19.Text = "0:00";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // blackResign
+            // 
+            this.blackResign.Location = new System.Drawing.Point(806, 350);
+            this.blackResign.Name = "blackResign";
+            this.blackResign.Size = new System.Drawing.Size(75, 25);
+            this.blackResign.TabIndex = 93;
+            this.blackResign.Text = "Resign";
+            this.blackResign.UseVisualStyleBackColor = true;
+            this.blackResign.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Resign);
+            // 
+            // whiteResign
+            // 
+            this.whiteResign.Location = new System.Drawing.Point(806, 425);
+            this.whiteResign.Name = "whiteResign";
+            this.whiteResign.Size = new System.Drawing.Size(75, 25);
+            this.whiteResign.TabIndex = 94;
+            this.whiteResign.Text = "Resign";
+            this.whiteResign.UseVisualStyleBackColor = true;
+            this.whiteResign.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Resign);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(888, 800);
+            this.Controls.Add(this.whiteResign);
+            this.Controls.Add(this.blackResign);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.exitBox);
@@ -1230,6 +1254,8 @@ namespace Chess
         private System.Windows.Forms.PictureBox exitBox;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Button blackResign;
+        private System.Windows.Forms.Button whiteResign;
     }
 }
 

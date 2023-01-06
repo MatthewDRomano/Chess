@@ -55,7 +55,7 @@ namespace Chess
             array = array.Where((source, index) => index != removeAt).ToArray(); //INSTEA OF CALLING THIS METHOD            
             return array;
         }
-        private  bool Legal(Pieces piece)
+        private bool Legal(Pieces piece)
         {
             bool legal = false;
             int deltaX = Math.Abs(newPos.X - oldPos.X), deltaY = Math.Abs(newPos.Y - oldPos.Y);
