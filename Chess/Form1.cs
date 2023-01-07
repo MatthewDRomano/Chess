@@ -107,14 +107,16 @@ namespace Chess
         #region Timers
         private void blackTimer_Tick(object sender, EventArgs e)//combine?
         {
-
+            int seconds = ((timerTime * 60) - timeCounterB-1) % 60;
+            if (seconds < 10 && seconds != 0) label19.Text = (((timerTime * 60) - ++timeCounterB) / 60).ToString() + ":0" + (((timerTime * 60) - timeCounterB) % 60).ToString();
+            else label19.Text = (((timerTime * 60) - ++timeCounterB) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterB) % 60).ToString();           
+            if (timerTime * 60 - timeCounterB == 0) Win("White wins", "ran out of time");
         }
         private void whiteTimer_Tick(object sender, EventArgs e)//combine?
         {
-            int seconds = ((timerTime * 60) - timeCounterW) % 60;
+            int seconds = ((timerTime * 60) - timeCounterW-1) % 60;
             if (seconds < 10 && seconds != 0) label18.Text = (((timerTime * 60) - ++timeCounterW) / 60).ToString() + ":0" + (((timerTime * 60) - timeCounterW) % 60).ToString();
-            else label18.Text = (((timerTime * 60) - ++timeCounterW) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterW) % 60).ToString();
-            //ActiveForm.Text = "White: " + (((timerTime * 60) - ++timeCounterW) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterW) % 60).ToString();
+            else label18.Text = (((timerTime * 60) - ++timeCounterW) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterW) % 60).ToString();          
             if (timerTime * 60 - timeCounterW == 0) Win("Black wins", "ran out of time");
         }
         #endregion
