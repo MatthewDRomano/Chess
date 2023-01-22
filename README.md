@@ -1,10 +1,10 @@
 # Chess 
 ![image](https://user-images.githubusercontent.com/120230187/213899640-507926a3-9fad-4664-81ff-12a071152493.png)
 
-##Language
+## Language
 Coded in VisualStudio w/ C#
 
-##Features
+## Features
 - [x] Pieces and Board Visualization
 - [x] Legal Move Detection
 - [x] All Special Moves (En Pessant, Pawn Promotion, Castle)
@@ -13,9 +13,9 @@ Coded in VisualStudio w/ C#
 - [x] Shows Possible Legal Moves
 - [x] Win / Draw Detection
 - [x] Menu w/ Different Timer Settings
-- [] Dead Position / Draw by Insufficient Material
-- [] Multiplayer
-- [] Intelligent Chess AI
+- [ ] Dead Position / Draw by Insufficient Material
+- [ ] Multiplayer
+- [ ] Intelligent Chess AI
 
 As a coder, this is my first big project in C#. The game is complete, only missing a few components.
 I expect there to be many things in my code that may be redundant, wrong, or extremely inefficient due to my relatively average experience with the language. 
