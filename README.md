@@ -18,7 +18,7 @@ Coded in VisualStudio w/ C#
 - [x] Win / Draw Detection
 - [x] Menu w/ Different Timer Settings
 - [ ] Dead Position / Draw by Insufficient Material
-- [ ] Multiplayer
+- [ ] Online Multiplayer
 - [ ] Intelligent Chess AI
 
 ## Contributions
