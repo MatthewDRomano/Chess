@@ -17,7 +17,7 @@ Coded in VisualStudio w/ C#
 - [x] Shows Possible Legal Moves
 - [x] Win / Draw Detection
 - [x] Menu w/ Different Timer Settings
-- [x] Draw by Insufficient Material
+- [x] Draw by Insufficient Material (Chess.com and USCF rules)
 - [ ] Dead Position
 - [ ] Online Multiplayer
 - [ ] Intelligent Chess AI
