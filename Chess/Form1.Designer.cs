@@ -102,6 +102,7 @@ namespace Chess
             this.label19 = new System.Windows.Forms.Label();
             this.blackResign = new System.Windows.Forms.Button();
             this.whiteResign = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.F1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.H1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.D1)).BeginInit();
@@ -1031,11 +1032,21 @@ namespace Chess
             this.whiteResign.UseVisualStyleBackColor = true;
             this.whiteResign.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Resign);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(832, 250);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 95;
+            this.label1.Text = "label1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(888, 800);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.whiteResign);
             this.Controls.Add(this.blackResign);
             this.Controls.Add(this.label19);
@@ -1179,6 +1190,7 @@ namespace Chess
             ((System.ComponentModel.ISupportInitialize)(this.A8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.exitBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1256,6 +1268,7 @@ namespace Chess
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button blackResign;
         private System.Windows.Forms.Button whiteResign;
+        private System.Windows.Forms.Label label1;
     }
 }
 

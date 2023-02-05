@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Chess 
-{ 
+namespace Chess
+{
     public enum Type
     {
         Pawn,
@@ -34,12 +34,12 @@ namespace Chess
         int prevOld, prevNew, prevCheck;//make array Exclusions[]
         Color ogColor;
         String[] gameHistory = new string[0];
-        
+
         Pieces castler; Pieces pessanter; //in pseudoFen, if these are not null then fen is updated to include pessant or castle
         #endregion
 
         public Form1(int timerTime)
-        {          
+        {
             this.timerTime = timerTime;
             InitializeComponent();
             blackResign.Enabled = false;
@@ -59,40 +59,40 @@ namespace Chess
         private Pieces[] initializePieceArray()
         {
             allPieces = new Pieces[32];
-            allPieces[0] = new Pieces(Type.Pawn, true, new Point(0, 1));
-            allPieces[1] = new Pieces(Type.Pawn, true, new Point(1, 1));
-            allPieces[2] = new Pieces(Type.Pawn, true, new Point(2, 1));
-            allPieces[3] = new Pieces(Type.Pawn, true, new Point(3, 1));
-            allPieces[4] = new Pieces(Type.Pawn, true, new Point(4, 1));
-            allPieces[5] = new Pieces(Type.Pawn, true, new Point(5, 1));
-            allPieces[6] = new Pieces(Type.Pawn, true, new Point(6, 1));
-            allPieces[7] = new Pieces(Type.Pawn, true, new Point(7, 1));
-            allPieces[8] = new Pieces(Type.Pawn, false, new Point(0, 6));
-            allPieces[9] = new Pieces(Type.Pawn, false, new Point(1, 6));
-            allPieces[10] = new Pieces(Type.Pawn, false, new Point(2, 6));
-            allPieces[11] = new Pieces(Type.Pawn, false, new Point(3, 6));
-            allPieces[12] = new Pieces(Type.Pawn, false, new Point(4, 6));
-            allPieces[13] = new Pieces(Type.Pawn, false, new Point(5, 6));
-            allPieces[14] = new Pieces(Type.Pawn, false, new Point(6, 6));
-            allPieces[15] = new Pieces(Type.Pawn, false, new Point(7, 6));
+            allPieces[0] = new Pieces(Type.Pawn, true, new Point(0, 1), 1);
+            allPieces[1] = new Pieces(Type.Pawn, true, new Point(1, 1), 1);
+            allPieces[2] = new Pieces(Type.Pawn, true, new Point(2, 1), 1);
+            allPieces[3] = new Pieces(Type.Pawn, true, new Point(3, 1), 1);
+            allPieces[4] = new Pieces(Type.Pawn, true, new Point(4, 1), 1);
+            allPieces[5] = new Pieces(Type.Pawn, true, new Point(5, 1), 1);
+            allPieces[6] = new Pieces(Type.Pawn, true, new Point(6, 1), 1);
+            allPieces[7] = new Pieces(Type.Pawn, true, new Point(7, 1), 1);
+            allPieces[8] = new Pieces(Type.Pawn, false, new Point(0, 6), 1);
+            allPieces[9] = new Pieces(Type.Pawn, false, new Point(1, 6), 1);
+            allPieces[10] = new Pieces(Type.Pawn, false, new Point(2, 6), 1);
+            allPieces[11] = new Pieces(Type.Pawn, false, new Point(3, 6), 1);
+            allPieces[12] = new Pieces(Type.Pawn, false, new Point(4, 6), 1);
+            allPieces[13] = new Pieces(Type.Pawn, false, new Point(5, 6), 1);
+            allPieces[14] = new Pieces(Type.Pawn, false, new Point(6, 6), 1);
+            allPieces[15] = new Pieces(Type.Pawn, false, new Point(7, 6), 1);
 
-            allPieces[16] = new Pieces(Type.Rook, true, new Point(0, 0));
-            allPieces[17] = new Pieces(Type.Knight, true, new Point(1, 0));
-            allPieces[18] = new Pieces(Type.Bishop, true, new Point(2, 0));
-            allPieces[19] = new Pieces(Type.Queen, true, new Point(3, 0));
-            allPieces[20] = new Pieces(Type.King, true, new Point(4, 0));
-            allPieces[21] = new Pieces(Type.Bishop, true, new Point(5, 0));
-            allPieces[22] = new Pieces(Type.Knight, true, new Point(6, 0));
-            allPieces[23] = new Pieces(Type.Rook, true, new Point(7, 0));
+            allPieces[16] = new Pieces(Type.Rook, true, new Point(0, 0), 5);
+            allPieces[17] = new Pieces(Type.Knight, true, new Point(1, 0), 3);
+            allPieces[18] = new Pieces(Type.Bishop, true, new Point(2, 0), 3);
+            allPieces[19] = new Pieces(Type.Queen, true, new Point(3, 0), 9);
+            allPieces[20] = new Pieces(Type.King, true, new Point(4, 0), 10);
+            allPieces[21] = new Pieces(Type.Bishop, true, new Point(5, 0), 3);
+            allPieces[22] = new Pieces(Type.Knight, true, new Point(6, 0), 3);
+            allPieces[23] = new Pieces(Type.Rook, true, new Point(7, 0), 5);
 
-            allPieces[24] = new Pieces(Type.Rook, false, new Point(0, 7));
-            allPieces[25] = new Pieces(Type.Knight, false, new Point(1, 7));
-            allPieces[26] = new Pieces(Type.Bishop, false, new Point(2, 7));
-            allPieces[27] = new Pieces(Type.Queen, false, new Point(3, 7));
-            allPieces[28] = new Pieces(Type.King, false, new Point(4, 7));
-            allPieces[29] = new Pieces(Type.Bishop, false, new Point(5, 7));
-            allPieces[30] = new Pieces(Type.Knight, false, new Point(6, 7));
-            allPieces[31] = new Pieces(Type.Rook, false, new Point(7, 7));
+            allPieces[24] = new Pieces(Type.Rook, false, new Point(0, 7), 5);
+            allPieces[25] = new Pieces(Type.Knight, false, new Point(1, 7), 3);
+            allPieces[26] = new Pieces(Type.Bishop, false, new Point(2, 7), 3);
+            allPieces[27] = new Pieces(Type.Queen, false, new Point(3, 7), 9);
+            allPieces[28] = new Pieces(Type.King, false, new Point(4, 7), 10);
+            allPieces[29] = new Pieces(Type.Bishop, false, new Point(5, 7), 3);
+            allPieces[30] = new Pieces(Type.Knight, false, new Point(6, 7), 3);
+            allPieces[31] = new Pieces(Type.Rook, false, new Point(7, 7), 5);
 
             return allPieces;
         }
@@ -100,23 +100,23 @@ namespace Chess
         {
             PictureBox[] boardArray = new PictureBox[64];
             foreach (PictureBox pb in this.Controls.OfType<PictureBox>())
-                if (pb.Tag != null) boardArray[Convert.ToInt32(pb.Tag.ToString()[1] - '0') * 8 + Convert.ToInt32(pb.Tag.ToString()[0] - '0')] = pb; 
+                if (pb.Tag != null) boardArray[Convert.ToInt32(pb.Tag.ToString()[1] - '0') * 8 + Convert.ToInt32(pb.Tag.ToString()[0] - '0')] = pb;
             return boardArray;
         }
 
         #region Timers
         private void blackTimer_Tick(object sender, EventArgs e)//combine?
         {
-            int seconds = ((timerTime * 60) - timeCounterB-1) % 60;
+            int seconds = ((timerTime * 60) - timeCounterB - 1) % 60;
             if (seconds < 10 && seconds != 0) label19.Text = (((timerTime * 60) - ++timeCounterB) / 60).ToString() + ":0" + (((timerTime * 60) - timeCounterB) % 60).ToString();
-            else label19.Text = (((timerTime * 60) - ++timeCounterB) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterB) % 60).ToString();           
+            else label19.Text = (((timerTime * 60) - ++timeCounterB) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterB) % 60).ToString();
             if (timerTime * 60 - timeCounterB == 0) Win("White wins", "ran out of time");
         }
         private void whiteTimer_Tick(object sender, EventArgs e)//combine?
         {
-            int seconds = ((timerTime * 60) - timeCounterW-1) % 60;
+            int seconds = ((timerTime * 60) - timeCounterW - 1) % 60;
             if (seconds < 10 && seconds != 0) label18.Text = (((timerTime * 60) - ++timeCounterW) / 60).ToString() + ":0" + (((timerTime * 60) - timeCounterW) % 60).ToString();
-            else label18.Text = (((timerTime * 60) - ++timeCounterW) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterW) % 60).ToString();          
+            else label18.Text = (((timerTime * 60) - ++timeCounterW) / 60).ToString() + ":" + (((timerTime * 60) - timeCounterW) % 60).ToString();
             if (timerTime * 60 - timeCounterW == 0) Win("Black wins", "ran out of time");
         }
         #endregion
@@ -150,22 +150,22 @@ namespace Chess
             {
                 if (x == 99 && y == 99 && allPieces[i].Position == oldPos) return i;
                 else if (allPieces[i].Position == new Point(x, y) && i != spotInPieceArray) return i;
-            } 
+            }
             return 99;
         }
         private int FindBoardSpot(int x, int y)
         {
-            for (int i = 0; i < boardArray.Length; i++)            
-                if (x * 100 == boardArray[i].Location.X && y * 100 == boardArray[i].Location.Y) return i;          
+            for (int i = 0; i < boardArray.Length; i++)
+                if (x * 100 == boardArray[i].Location.X && y * 100 == boardArray[i].Location.Y) return i;
             return 0;
-        }        
+        }
         private void RefreshHighlights(int one = 99, int two = 99)//issue: column 1 doesn't work right
         {
             bool even = false;
             for (int i = 0; i < boardArray.Length; i++)
             {
                 if (i % 8 == 0 && (i == one || i == two)) continue;
-                else if (i == one || i == two) { even =  !even; continue; }
+                else if (i == one || i == two) { even = !even; continue; }
 
                 if (i % 8 == 0) even = !even;
                 if (!even) { boardArray[i].BackColor = Color.FromArgb(238, 238, 210); even = !even; continue; }
@@ -203,7 +203,7 @@ namespace Chess
             {
                 if (boardArray[i].Image != null) { boardArray[i].Image.Dispose(); boardArray[i].Image = null; }
                 spotInPieceArray = 999;//maybe make this its OG value after following if statment if bug continues
-                if (FindPiece(boardArray[i].Location.X / 100, boardArray[i].Location.Y / 100) == 99 && boardArray[i].BackgroundImage != null) 
+                if (FindPiece(boardArray[i].Location.X / 100, boardArray[i].Location.Y / 100) == 99 && boardArray[i].BackgroundImage != null)
                 {
                     boardArray[i].BackgroundImage.Dispose();
                     boardArray[i].BackgroundImage = null;
@@ -226,7 +226,11 @@ namespace Chess
                 if (boardArray[q].BackgroundImage == null) return;
                 if (gameMoves % 2 == 0 && allPieces[FindPiece()].Color) return; // if its black on even moves it returns;
                 else if (gameMoves % 2 == 1 && !allPieces[FindPiece()].Color) return;// if its white on odd moves it returns;
-                //           
+                //if (gameMoves % 2 == 1)
+                //{
+                //    (oldPos, newPos) = BestMove(true);
+                //    DoMove();
+                //}
                 ogColor = boardArray[q].BackColor;
                 boardArray[q].BackColor = Color.FromArgb(247, 247, 105);
                 ShowLegals();
@@ -275,27 +279,27 @@ namespace Chess
             allPieces[spotInPieceArray].Position = newPos; // updates piece position  
 
             foreach (Pieces piece in allPieces) if (piece.Type == Type.Pawn)//checks for if promotion can happen
-            {               
-                if ((piece.Color && piece.Position.Y == 7) || (!piece.Color && piece.Position.Y == 0)) { haltMove = true; PromoteBoard(); }                
-            }
-
+                {
+                    if ((piece.Color && piece.Position.Y == 7) || (!piece.Color && piece.Position.Y == 0)) { haltMove = true; PromoteBoard(); }
+                }
             if (FindPiece(newPos.X, newPos.Y) != 99) { allPieces = RemovePiece(allPieces, FindPiece(newPos.X, newPos.Y)); fiftyMoveBreaker = 0; }
 
-            AssignImage(temp.Color, temp.Type, newSpotInBoardArray);
-            
+            AssignImage(allPieces[spotInPieceArray].Color, allPieces[spotInPieceArray].Type, newSpotInBoardArray);
             gameMoves++;
-
+            int temp3 = spotInPieceArray;//this line and the one below corrospond to lines 369-371 so promotion isnt bugged due to these variables being changed
+            Point tempnew = newPos, tempold = oldPos;
             Array.Resize(ref gameHistory, gameHistory.Length + 1);
-            gameHistory[gameHistory.Length - 1] = currentPosString();
+            gameHistory[gameHistory.Length - 1] = currentPosString();//causes issue
             int counter2 = 0;
             for (int i = 0; i < gameHistory.Length; i++) if (gameHistory.Length > 1)//5 fold repition
                 {
                     if (i == gameHistory.Length - 1) break;
-                    if (gameHistory[i] == currentPosString()) counter2++;
+                    if (gameHistory[i] == currentPosString()) counter2++;//causes issue
                 }
             if (counter2 == 4) Win("Draw", "By Repition");//change the 4 to 2 if you want 3 move rep
 
             if (IfCheck()) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
+
             if (check)//checkmate
             {
                 int count = 0;
@@ -313,7 +317,8 @@ namespace Chess
                 boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105);
                 boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
             }
-            else if (!check)//stalemate
+            
+            else//stalemate
             {
                 int count = 0;
                 for (int i = 0; i < allPieces.Length; i++)
@@ -330,32 +335,62 @@ namespace Chess
                 boardArray[prevOld].BackColor = Color.FromArgb(247, 247, 105);
                 if (check) boardArray[prevCheck].BackColor = Color.FromArgb(237, 59, 59);
             }
-            
             if (fiftyMoveBreaker == 50) Win("      Draw", "by 50-Move-Rule");//50 move rule 
 
+            int wkngs = 0, wbsps = 0, wrks = 0, wknts = 0, wqns = 0, wpwns = 0;
+            int bkngs = 0, bbsps = 0, brks = 0, bknts = 0, bqns = 0, bpwns = 0;
+            foreach (Pieces piece in allPieces)
+            {
+                if (!piece.Color)
+                {
+                    if (piece.Type == Type.Pawn) wpwns++;
+                    else if (piece.Type == Type.Rook) wrks++;
+                    else if (piece.Type == Type.Rook) wbsps++;
+                    else if (piece.Type == Type.Rook) wqns++;
+                    else if (piece.Type == Type.Rook) wknts++;
+                    else if (piece.Type == Type.King) wkngs++;
+                }
+                else if (piece.Color)
+                {
+                    if (piece.Type == Type.Pawn) bpwns++;
+                    else if (piece.Type == Type.Rook) brks++;
+                    else if (piece.Type == Type.Rook) bbsps++;
+                    else if (piece.Type == Type.Rook) bqns++;
+                    else if (piece.Type == Type.Rook) bknts++;
+                    else if (piece.Type == Type.King) bkngs++;
+                }
+            }
+            if (allPieces.Length == 2 && wkngs == 1 && bkngs == 1) Win("       Draw", "Insufficient Material");
+            else if (allPieces.Length == 4 && wknts == 1 && bknts == 1) Win("       Draw", "Insufficient Material");
+            else if (allPieces.Length == 4 && wbsps == 1 && bbsps == 1) Win("       Draw", "Insufficient Material");
+            else if (allPieces.Length == 3 && wkngs == 1 & bkngs == 1 && (wqns + bqns) == 0 && (wrks + brks) == 0 && (wpwns + bpwns == 0)) Win("       Draw", "Insufficient Material");
             //dead position
+            
+            spotInPieceArray = temp3;
+            oldPos = tempold;
+            newPos = tempnew;
         }
         #endregion
 
         #region Move Legality / Check
         private bool IfCheck(Pieces movedPiece = null, bool? curCol = null)
         {
-            foreach (Pieces piece in allPieces) if (piece.Type == Type.King) 
-            {                              
-                if (curCol != null && piece.Color != curCol) continue;
-                Sim sim1 = new Sim(allPieces, oldPos, gameMoves);
-                haltMove = true;
-                if (sim1.underAttack(piece.Position, allPieces, piece, movedPiece))//
+            foreach (Pieces piece in allPieces) if (piece.Type == Type.King)
                 {
+                    if (curCol != null && piece.Color != curCol) continue;
+                    Sim sim1 = new Sim(allPieces, oldPos, gameMoves);
+                    haltMove = true;
+                    if (sim1.underAttack(piece.Position, allPieces, piece, movedPiece))//
+                    {
+                        haltMove = false;
+                        //label17.Text = "CHECK!";//
+                        boardArray[FindBoardSpot(piece.Position.X, piece.Position.Y)].BackColor = Color.FromArgb(237, 59, 59);
+                        prevCheck = FindBoardSpot(piece.Position.X, piece.Position.Y);
+                        return check = true;
+                    }
+                    //else label17.Text = "Not in check!";//
                     haltMove = false;
-                    //label17.Text = "CHECK!";//
-                    boardArray[FindBoardSpot(piece.Position.X, piece.Position.Y)].BackColor = Color.FromArgb(237, 59, 59);
-                    prevCheck = FindBoardSpot(piece.Position.X, piece.Position.Y);
-                    return check = true;
                 }
-                //else label17.Text = "Not in check!";//
-                haltMove = false;                
-            }
             return check = false;
         }
         private bool CheckPreventsMove(Pieces piece)
@@ -495,7 +530,7 @@ namespace Chess
                             }
                         }
                         piece.Position = oldPos;
-                    }                  
+                    }
                     break;
             }
             return legal;
@@ -532,7 +567,7 @@ namespace Chess
             winningBox.Region = new Region(gp);
 
             Label winMsg = new Label();
-            this.Controls.Add(winMsg);            
+            this.Controls.Add(winMsg);
             winMsg.Location = new Point(325, (int)(winningBox.Location.Y * 1.125));
             winMsg.Size = new Size(300, 90);
             winMsg.BringToFront();
@@ -657,7 +692,7 @@ namespace Chess
                             else if (!piece.Color) pseudoFen += "K";
                             break;
                     }
-                }                
+                }
                 else pseudoFen += "x";
             }
             //label20.Text = pseudoFen;
@@ -666,5 +701,45 @@ namespace Chess
             return pseudoFen;
         }
         private void RestartGame(object sender, MouseEventArgs e) { this.Hide(); menu newMenu = new menu(); newMenu.ShowDialog(); }
+        //public Random myRandy = new Random();
+        //public (Point, Point) BestMove(bool color)//issue may be location of where this method is called
+        //{
+        //    int best = 0;
+        //    Point _old = new Point(100, 100), _new = new Point(100, 100);
+        //    Point[][] allMoves = new Point[0][];
+        //    Point[] piecePositions = new Point[0];
+        //    foreach (Pieces piece in allPieces) if (piece.Color == color)
+        //        {
+        //            Point[] pieceMoves = AllLegalMoves(piece);
+        //            if (pieceMoves.Length < 1) continue;
+
+        //            Array.Resize(ref allMoves, allMoves.Length + 1);
+        //            allMoves[allMoves.Length - 1] = pieceMoves;
+        //            Array.Resize(ref piecePositions, piecePositions.Length + 1);
+        //            piecePositions[piecePositions.Length - 1] = piece.Position;
+        //        }
+        //    for (int i = 0; i < allMoves.Length; i++)
+        //    {
+        //        for (int q = 0; q < allMoves[i].Length; q++)
+        //        {
+        //            spotInPieceArray = 999;
+        //            if (FindPiece(allMoves[i][q].X, allMoves[i][q].Y) == 99) continue;
+        //            if (allPieces[FindPiece(allMoves[i][q].X, allMoves[i][q].Y)].Value > best)
+        //            {
+        //                best = allPieces[FindPiece(allMoves[i][q].X, allMoves[i][q].Y)].Value;
+        //                _new = allMoves[i][q];
+        //                _old = piecePositions[i];
+        //            }
+        //        }
+        //    }
+        //    // label1.Text = " ";
+            
+        //    //if (piecePositions.Length == 0 || allMoves.Length== 0) label1.Text = (allMoves.Length.ToString() + " " + piecePositions.Length.ToString());//issue arrises when movablePieces.length is 0 i think. Cant geta  random between 0 and not 0
+        //    int randomPos = myRandy.Next(0, piecePositions.Length);
+        //    //label1.Text = allMoves.Length.ToString() + "\n" + piecePositions.Length.ToString();
+        //    int randomMove = myRandy.Next(0, allMoves[randomPos].Length);// try removing all legal moves and substitute with a form of showLegals(). I think issues are in AllLegalMoves()
+        //    if (_old.X == 100 || _new.X == 100) return (piecePositions[randomPos], allMoves[randomPos][randomMove]);//issue is one of these arrays has no length or all
+        //    return (_old, _new);
+        //}
     }
 }

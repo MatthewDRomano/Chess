@@ -14,12 +14,14 @@ namespace Chess
         private bool color;
         private int moves = 0;
         private int lastMove;
+        public int Value { get; set; }
 
-        public Pieces(Type theType, bool theColor, Point pos)
+        public Pieces(Type theType, bool theColor, Point pos, int value)
         {
             type = theType;
             position = pos;
             color = theColor;
+            Value = value;
         }
         public Point Position
         {
