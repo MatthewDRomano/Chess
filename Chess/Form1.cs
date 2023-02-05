@@ -284,7 +284,7 @@ namespace Chess
                 }
             if (FindPiece(newPos.X, newPos.Y) != 99) { allPieces = RemovePiece(allPieces, FindPiece(newPos.X, newPos.Y)); fiftyMoveBreaker = 0; }
 
-            AssignImage(allPieces[spotInPieceArray].Color, allPieces[spotInPieceArray].Type, newSpotInBoardArray);
+            AssignImage(temp.Color, temp.Type, newSpotInBoardArray);
             gameMoves++;
             int temp3 = spotInPieceArray;//this line and the one below corrospond to lines 369-371 so promotion isnt bugged due to these variables being changed
             Point tempnew = newPos, tempold = oldPos;
