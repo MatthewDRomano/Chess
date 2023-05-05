@@ -15,7 +15,7 @@ Coded in VisualStudio w/ C#
 - [x] Check Detection
 - [x] Highlights (Red for Check) (Yellow for Moves)
 - [x] Shows Possible Legal Moves
-- [x] Win / Draw Detection
+- [x] Win / Stalemate Detection
 - [x] Menu w/ Different Timer Settings
 - [x] Draw by Insufficient Material (Chess.com and USCF rules)
 - [x] Draw by 5 Move Repitition
