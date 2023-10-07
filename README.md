@@ -11,7 +11,7 @@ Coded in VisualStudio w/ C#
 ## Features
 - [x] Pieces and Board Visualization
 - [x] Legal Move Detection
-- [x] All Special Moves (En Pessant, Pawn Promotion, Castle)
+- [x] All Special Moves (En Passant, Pawn Promotion, Castle)
 - [x] Check Detection
 - [x] Highlights (Red for Check) (Yellow for Moves)
 - [x] Shows Possible Legal Moves
