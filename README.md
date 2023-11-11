@@ -18,7 +18,7 @@ Coded in VisualStudio w/ C#
 - [x] Win / Stalemate Detection
 - [x] Menu w/ Different Timer Settings
 - [x] Draw by Insufficient Material (Chess.com and USCF rules)
-- [x] Draw by 5 Move Repitition
+- [x] Draw by 5 Move Repetition
 - [ ] Dead Position
 - [ ] Online Multiplayer
 - [ ] Intelligent Chess AI
